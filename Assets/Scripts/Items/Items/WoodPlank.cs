@@ -3,7 +3,7 @@ using System.Collections;
 
 public class WoodPlank : Craftable {
 
-	public WoodPlank () : base (5, "wood_plank") {
+	public WoodPlank () : base (5, "wood_plank", "Artwork\\Items\\WoodPlank") {
 		this.numberOfDifferentIngredients = 1;
 		this.ingredients = new ItemBase[this.numberOfDifferentIngredients];
 		this.numbersOfIngredients = new int[this.numberOfDifferentIngredients];

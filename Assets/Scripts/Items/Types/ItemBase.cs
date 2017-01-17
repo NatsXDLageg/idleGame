@@ -8,10 +8,12 @@ public abstract class ItemBase {
 
 	private int id;
 	private string itemName;
+    private string spritePath;
 
-	public ItemBase(int id, string name) {
+	public ItemBase(int id, string name, string spritePath) {
 		this.id = id;
 		this.itemName = name;
+        this.spritePath = spritePath;
 	}
 
 	public int GetId() {
@@ -21,4 +23,9 @@ public abstract class ItemBase {
 	public string GetName() {
 		return this.itemName;
 	}
+
+    public string GetSpritePath()
+    {
+        return this.spritePath;
+    }
 }

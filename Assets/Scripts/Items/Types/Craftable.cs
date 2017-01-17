@@ -5,12 +5,11 @@ public abstract class Craftable : ItemBase {
 	protected int numberOfDifferentIngredients;
 	protected ItemBase[] ingredients;
 	protected int[] numbersOfIngredients;
-
 	protected int numberCrafted;
 
-	public Craftable(int id, string name) : base(id, name) {}
+	public Craftable(int id, string name, string spritePath) : base(id, name, spritePath) { }
 
-	public ItemBase[] GetIngredients() {
+    public ItemBase[] GetIngredients() {
 		return this.ingredients;
 	}
 }
