@@ -4,26 +4,25 @@ using System.IO;
 using System.Linq;
 using System;
 
-public class Inventory {
-
+public class Inventory
+{
     public static Inventory instance;
 
     public static Inventory GetInventory()
     {
         Inventory inventory = new Inventory();
-        inventory.LoadInventory();
         return inventory;
     }
 
     private string inventoryKey = "InventorySaved";
 
     private string itemsPathName = ".\\Assets\\Scripts\\Items\\Items";
-    private ItemBase[] items;
-    private int[] itemsQuantity;
+    private Type[] itemsTypes;
+    private ItemInfo[] items;
 
     private string toolsPathName = ".\\Assets\\Scripts\\Items\\Tools";
-    private ItemBase[] tools;
-    private int[] toolsQuantity;
+    private ItemInfo[] tools;
+
 
     private Inventory()
     {
@@ -44,31 +43,90 @@ public class Inventory {
         {
             itemsNames[i] = Path.GetFileNameWithoutExtension(filesNames[i]);
         }
-
-        int numberOfItems = itemsNames.Length;
-        this.items = new ItemBase[numberOfItems];
-        this.itemsQuantity = new int[numberOfItems];
         
+        this.items = new ItemInfo[numberOfFiles];
+
         try
         {
-            for (i = 0; i < numberOfItems; i++)
+            this.itemsTypes = new Type[numberOfFiles];
+            for (i = 0; i < numberOfFiles; i++)
             {
                 Type t = Type.GetType(itemsNames[i]);
-                this.items[i] = (ItemBase)Activator.CreateInstance(t);
-
-                this.itemsQuantity[i] = 0;
+                this.itemsTypes[i] = t;
             }
         }
-        catch(MissingMethodException exception)
+        catch (MissingMethodException)
         {
             Debug.LogWarning("Could not find class " + itemsNames[i]);
         }
     }
 
-    public void GetItems(out ItemBase[] items, out int[] itemsQuantity)
+    public int GetNumberOfItems()
     {
-        items = this.items;
-        itemsQuantity = this.itemsQuantity;
+        return this.items.Length;
+    }
+
+    /// <summary>
+    /// Sets each of the items that are in the array
+    /// It must be called only once
+    /// </summary>
+    /// <param name="item"></param>
+    /// <param name="index"></param>
+    public void SetItem (ItemInfo item, int index)
+    {
+        this.items[index] = item;
+        this.items[index].SetItemBase((ItemBase)Activator.CreateInstance(this.itemsTypes[index]));
+        this.items[index].SetQuantity(0);
+    }
+
+    public ItemInfo GetItem(int index)
+    {
+        return this.items[index];
+    }
+    public ItemInfo[] GetItems()
+    {
+        return this.items;
+    }
+    
+    /// <summary>
+    /// Increases the quantity of a certain item
+    /// if no item with the specified name is found, it returns false, otherwise, it returns true
+    /// </summary>
+    /// <param name=""></param>
+    /// <returns></returns>
+    public bool IncreaseItemQuantity(string itemName, int quantity = 1)
+    {
+        for (int i = 0; i < this.items.Length; i++)
+        {
+            if(this.items[i].GetItemBase().GetType().Name == itemName)
+            {
+                this.items[i].IncQuantity(quantity);
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public bool DecreaseItemQuantity(string itemName, out bool hasEnought, int quantity = 1)
+    {
+        for (int i = 0; i < this.items.Length; i++)
+        {
+            if (this.items[i].GetItemBase().GetType().Name == itemName)
+            {
+                if(this.items[i].GetQuantity() >= quantity)
+                {
+                    this.items[i].IncQuantity(-1 * quantity);
+                    hasEnought = true;
+                }
+                else
+                {
+                    hasEnought = false;
+                }
+                return true;
+            }
+        }
+        hasEnought = false;
+        return false;
     }
 
     public void LoadInventory()
@@ -77,7 +135,7 @@ public class Inventory {
         {
             for (int i = 0; i < this.items.Length; i++)
             {
-                itemsQuantity[i] = PlayerPrefs.GetInt(this.inventoryKey + items[i].GetName());
+                items[i].SetQuantity(PlayerPrefs.GetInt(this.inventoryKey + items[i].GetItemBase().GetName()));
             }
         }
         else
@@ -85,7 +143,7 @@ public class Inventory {
             PlayerPrefs.SetInt(this.inventoryKey, 1);
             for (int i = 0; i < this.items.Length; i++)
             {
-                PlayerPrefs.SetInt(this.inventoryKey + items[i].GetName(), 0);
+                PlayerPrefs.SetInt(this.inventoryKey + items[i].GetItemBase().GetName(), 0);
             }
         }
     }

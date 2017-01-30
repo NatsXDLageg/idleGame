@@ -61,6 +61,9 @@
     <Reference Include="UnityEditor">
       <HintPath>Library\UnityAssemblies\UnityEditor.dll</HintPath>
     </Reference>
+    <Reference Include="Mono.Cecil">
+      <HintPath>Library\UnityAssemblies\Mono.Cecil.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="IdleGame.Plugins.csproj">
@@ -69,7 +72,9 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Assets\Scripts\CollectWoodButtonBehaviour.cs" />
     <Compile Include="Assets\Scripts\Inventory.cs" />
+    <Compile Include="Assets\Scripts\ItemInfo.cs" />
     <Compile Include="Assets\Scripts\Items\Items\Cobblestone.cs" />
     <Compile Include="Assets\Scripts\Items\Items\WoodLog.cs" />
     <Compile Include="Assets\Scripts\Items\Items\WoodPlank.cs" />
@@ -77,9 +82,10 @@
     <Compile Include="Assets\Scripts\Items\Types\Craftable.cs" />
     <Compile Include="Assets\Scripts\Items\Types\ItemBase.cs" />
     <Compile Include="Assets\Scripts\Items\Types\Tool.cs" />
+    <Compile Include="Assets\Scripts\Items\Types\ToolTypes\Axe.cs" />
+    <Compile Include="Assets\Scripts\Items\Types\ToolTypes\Pickaxe.cs" />
     <Compile Include="Assets\Scripts\ItemsGrid.cs" />
     <Compile Include="Assets\Scripts\LoadSceneUtil.cs" />
-    <Compile Include="Assets\Scripts\Test.cs" />
     <Compile Include="Assets\Scripts\TogglePanelBehaviour.cs" />
   </ItemGroup>
   <ItemGroup>
