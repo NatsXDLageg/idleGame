@@ -16,6 +16,11 @@ public abstract class ItemBase {
         this.spritePath = spritePath;
 	}
 
+    public virtual bool isTool()
+    {
+        return false;
+    }
+
 	public int GetId() {
 		return this.id;
 	}

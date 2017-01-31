@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 using UnityEngine.UI;
+using System;
 
 public class ItemsGrid : MonoBehaviour {
 	public int nColumns;
@@ -20,6 +21,11 @@ public class ItemsGrid : MonoBehaviour {
 
         this.LoadInventory();
 	}
+
+    private void OnDestroy()
+    {
+        this.inventory.SaveInventory();
+    }
 
     public void LoadInventory()
     {
@@ -42,6 +48,7 @@ public class ItemsGrid : MonoBehaviour {
         }
 
         this.inventory.LoadInventory();
+        this.UpdateQuantity();
     }
 
     public bool IncreaseItemQuantity(string itemName, int quantity = 1)
@@ -71,5 +78,15 @@ public class ItemsGrid : MonoBehaviour {
         {            
             items[i].transform.GetChild(2).GetComponent<Text>().text = items[i].GetQuantity().ToString();
         }
+    }
+
+    public bool HasItem(string itemName, int quantity = 1)
+    {
+        return this.inventory.HasItem(itemName, quantity);
+    }
+    
+    public bool HasItem(Type type, int quantity = 1)
+    {
+        return this.inventory.HasItem(type, quantity);
     }
 }

@@ -7,4 +7,9 @@ public class Tool : ItemBase {
     protected float hardnessThatHarvests;
 
     public Tool(int id, string name, string spritePath) : base(id, name, spritePath) { }
+    
+    public override bool isTool()
+    {
+        return true;
+    }
 }

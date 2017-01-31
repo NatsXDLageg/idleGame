@@ -72,12 +72,14 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Assets\Scripts\ApplicationController.cs" />
     <Compile Include="Assets\Scripts\CollectWoodButtonBehaviour.cs" />
     <Compile Include="Assets\Scripts\Inventory.cs" />
     <Compile Include="Assets\Scripts\ItemInfo.cs" />
     <Compile Include="Assets\Scripts\Items\Items\Cobblestone.cs" />
     <Compile Include="Assets\Scripts\Items\Items\WoodLog.cs" />
     <Compile Include="Assets\Scripts\Items\Items\WoodPlank.cs" />
+    <Compile Include="Assets\Scripts\Items\Tools\StonePickaxe.cs" />
     <Compile Include="Assets\Scripts\Items\Types\Collectable.cs" />
     <Compile Include="Assets\Scripts\Items\Types\Craftable.cs" />
     <Compile Include="Assets\Scripts\Items\Types\ItemBase.cs" />

@@ -21,7 +21,6 @@ public class Inventory
     private ItemInfo[] items;
 
     private string toolsPathName = ".\\Assets\\Scripts\\Items\\Tools";
-    private ItemInfo[] tools;
 
 
     private Inventory()
@@ -29,21 +28,36 @@ public class Inventory
         //Remover essa linha!!!
         PlayerPrefs.DeleteAll();
 
-        //Items
-        string[] filesNames = Directory.GetFiles(this.itemsPathName, "*.cs");
-        if(filesNames == null)
+        //Items     --------------------------------------------------------------------------------------------------
+        string[] itemsFilesNames = Directory.GetFiles(this.itemsPathName, "*.cs");
+        if(itemsFilesNames == null)
         {
             Debug.LogWarning("No file was encontered in the given path: " + this.itemsPathName);
             return;
         }
-        int numberOfFiles = filesNames.Length;
+
+        string[] toolsFilesNames = Directory.GetFiles(this.toolsPathName, "*.cs");
+        if (toolsFilesNames == null)
+        {
+            Debug.LogWarning("No file was encontered in the given path: " + this.toolsPathName);
+            return;
+        }
+
+        int numberOfItems = itemsFilesNames.Length;
+        int numberOfTools = toolsFilesNames.Length;
+        int numberOfFiles = numberOfItems + numberOfTools;
+
         string[] itemsNames = new string[numberOfFiles];
         int i;
-        for(i = 0; i < numberOfFiles; i++)
+        for(i = 0; i < numberOfItems; i++)
         {
-            itemsNames[i] = Path.GetFileNameWithoutExtension(filesNames[i]);
+            itemsNames[i] = Path.GetFileNameWithoutExtension(itemsFilesNames[i]);
         }
-        
+        for (i = 0; i < numberOfTools; i++)
+        {
+            itemsNames[i + numberOfItems] = Path.GetFileNameWithoutExtension(toolsFilesNames[i]);
+        }
+
         this.items = new ItemInfo[numberOfFiles];
 
         try
@@ -129,6 +143,49 @@ public class Inventory
         return false;
     }
 
+    public bool HasItem(string itemName, int quantity = 1)
+    {
+        if(this.items == null)
+        {
+            Debug.Log("No items were found");
+            return false;
+        }
+        foreach (ItemInfo item in this.items)
+        {
+            if(item.GetItemBase().GetName() == itemName && item.GetQuantity() >= quantity)
+            {
+                return true;
+            }
+        }
+        Debug.LogWarning("Inventory doesn't have item " + itemName);
+        return false;
+    }
+
+    public bool HasItem(Type type, int quantity = 1)
+    {
+        if (this.items == null)
+        {
+            Debug.Log("No items were found");
+            return false;
+        }
+        foreach (ItemInfo item in this.items)
+        {
+            if (item.GetItemBase().GetType() == type && item.GetQuantity() >= quantity)
+            {
+                return true;
+            }
+            Type[] nestedTypes = item.GetItemBase().GetType().GetNestedTypes();
+            foreach (Type t in nestedTypes) {
+                if (t == type && item.GetQuantity() >= quantity)
+                {
+                    return true;
+                }
+            }
+        }
+        Debug.LogWarning("Inventory doesn't have item with type " + type);
+        return false;
+    }
+
     public void LoadInventory()
     {
         if(PlayerPrefs.HasKey(this.inventoryKey))
@@ -150,6 +207,10 @@ public class Inventory
 
     public void SaveInventory()
     {
-        
+        PlayerPrefs.SetInt(this.inventoryKey, 1);
+        for (int i = 0; i < this.items.Length; i++)
+        {
+            PlayerPrefs.SetInt(this.inventoryKey + items[i].GetItemBase().GetName(), items[i].GetQuantity());
+        }
     }
 }
